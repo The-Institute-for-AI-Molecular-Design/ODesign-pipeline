@@ -1,0 +1,71 @@
+
+
+<ROSETTASCRIPTS>
+
+    <SCOREFXNS>
+        <ScoreFunction name="sfxn" weights="beta_nov16" />
+        <ScoreFunction name="sfxn_cart" weights="beta_nov16_cart" />
+    </SCOREFXNS>
+
+    <RESIDUE_SELECTORS>
+        <Chain name="chainA" chains="1"/>
+        <Chain name="chainB" chains="2"/>
+        <Neighborhood name="interface_chA" selector="chainB" distance="14.0" />
+        <Neighborhood name="interface_chB" selector="chainA" distance="14.0" />
+        <And name="AB_interface" selectors="interface_chA,interface_chB" />
+        <Not name="Not_interface" selector="AB_interface" />
+    </RESIDUE_SELECTORS>
+
+    <TASKOPERATIONS>        
+        <ProteinInterfaceDesign name="pack_long" 
+            design_chain1="0" 
+            design_chain2="0" 
+            jump="1" 
+            interface_distance_cutoff="15"/>
+	    <OperateOnResidueSubset name="restrict_to_interface" selector="Not_interface">
+            <PreventRepackingRLT/>
+        </OperateOnResidueSubset>
+    </TASKOPERATIONS>
+
+    <MOVERS>
+        <TaskAwareMinMover name="minimize_interface" 
+            scorefxn="sfxn_cart" 
+            tolerance="0.01" 
+            cartesian="true" 
+            task_operations="restrict_to_interface" />
+        <TaskAwareMinMover name="min" 
+            scorefxn="sfxn" 
+            bb="0" 
+            chi="1" 
+            task_operations="pack_long" />
+    </MOVERS>
+
+    <FILTERS>
+        <Ddg name="ddg"  
+            threshold="-10" 
+            jump="1" 
+            repeats="5" 
+            repack="1" 
+            relax_mover="min" 
+            confidence="0" 
+            scorefxn="sfxn" 
+            extreme_value_removal="1" />
+        <ContactMolecularSurface name="contact_molecular_surface" 
+            distance_weight="0.5" 
+            target_selector="chainB" 
+            binder_selector="chainA" 
+            confidence="0" />
+    </FILTERS>
+
+    <SIMPLE_METRICS>
+         <SapScoreMetric name="sap_score" score_selector="chainA" />
+    </SIMPLE_METRICS>
+
+    <PROTOCOLS>
+        <Add mover="minimize_interface" />
+        <Add filter="ddg" />
+        <Add metrics="sap_score" />
+        <Add filter="contact_molecular_surface" />
+    </PROTOCOLS>
+
+</ROSETTASCRIPTS>

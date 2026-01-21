@@ -1,0 +1,28 @@
+{
+    "AF3_filter":
+    {
+        "binder_ptm": {
+            "threshold": 0.8,
+            "higher": true
+        },
+        "ipae_min": {
+            "threshold": 1.5,
+            "higher": false
+        }
+    },
+    "rosetta_filter":
+    {
+        "ddg": {
+            "threshold": -44,
+            "higher": false
+        },
+        "sap_score": {
+            "threshold": 40,
+            "higher": false
+        },
+        "contact_molecular_surface": {
+            "threshold": 400,
+            "higher": true
+        }
+    }
+}

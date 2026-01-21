@@ -1,0 +1,18 @@
+[
+  {
+    "name": "pdl1_prot_binder",
+    "ref_file": "./examples/prot_binder/PDL1_truncated.pdb",
+    "chains": [
+      {
+        "chain_type": "proteinChain",
+        "sequence": "60-150"
+      },
+      {
+        "chain_type": "proteinChain",
+        "sequence": "B/20-133"
+      }
+    ],
+    "hotspot": "B/64,B/68,B/126,B/128",
+    "center_method": "hotspot_center"
+  }
+]
