@@ -116,7 +116,7 @@ bash ./scripts/run_odesign.sh \
   --gpus 0
 ```
 
-In practical applications, we ran large-scale inference (over 10k designs). Increasing the number of seeds significantly improves the diversity and validity of generated designs. Therefore, we recommend keeping `N_sample` fixed at 20 and increasing the number of `seeds` to scale up the total sampling budget.
+In practical applications, we ran large-scale inference (over 10k designs). Increasing the number of seeds significantly improves the diversity and validity of generated designs. Therefore, we recommend keeping `N_sample` fixed at 20 and increasing the number of `seeds` to scale up the total sampling budget. 100 seeds are typically used in our large-scale design campaigns.
 
 
 | Argument              | Description                                                                                                                                             | Example                             |
