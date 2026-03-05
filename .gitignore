@@ -1,3 +1,4 @@
 *.pyc
 ODesign/
 examples/prot_binder/*/
+LigandMPNN/

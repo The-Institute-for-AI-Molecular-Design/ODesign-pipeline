@@ -132,6 +132,61 @@ In practical applications, we ran large-scale inference (over 10k designs). Incr
 | `output_dir` | ODesign inference output directory.                                                                                                                                | `./examples/prot_binder/odesign_out`                                 |
 | `gpus` | GPU device for inference.                                                                                                                                | `0` or `0,1,2,3`                                 |
 
+- Output Files
+
+```
+pdl1_prot_binder/
+├── seed_42/
+│   └── predictions/
+│       ├── pdl1_prot_binder_seed_42_bb_0_seq_0.cif
+│       └── ...
+└── seed_123/
+```
+
+- Inverse Folding (Optional)
+
+If you are more confortable with ProteinMPNN, here is a workflow for `ODesign Backbones & ProteinMPNN Inverse Folding`.
+
+1. Prepare LigandMPNN 
+```bash
+# clone repo
+git clone git clone https://github.com/dauparas/LigandMPNN.git
+
+# build environment
+conda create -n ligandmpnn_env python=3.11
+conda activate ligandmpnn_env
+pip3 install -r ./LigandMPNN/requirements.txt
+
+# get model parameters
+bash ./LigandMPNN/get_model_params.sh "./LigandMPNN/model_params"
+
+```
+
+2. Run command
+```bash
+# run inverse folding (for ODesign results)
+conda activate odesign
+export PYTHONPATH="$(pwd):$PYTHONPATH"
+python ./utils/prepare_mpnn_input.py \
+  --input_path ./examples/prot_binder/odesign_out/pdl1_prot_binder \
+  --output_path ./examples/prot_binder/mpnn_redesign_out \
+  --redesign_chain_id A
+
+conda activate ligandmpnn_env
+python ./scripts/run_mpnn_redesign.py \
+  --input_json ./examples/prot_binder/mpnn_redesign_out/mpnn_input.json \
+  --output_dir ./examples/prot_binder/mpnn_redesign_out \
+  --exp_name prot_binder \
+  --binder_chain_id A \
+  --batch_size 1 \
+  --number_of_batches 1 \
+  --temperature 0.1 \
+  --omit_AA C \
+  --mpnn_model_type protein_mpnn \
+  --protein_mpnn_ckpts ./LigandMPNN/model_params/proteinmpnn_v_48_020.pt \
+  --gpus 1,2
+```
+
 
 ## Filter
 
